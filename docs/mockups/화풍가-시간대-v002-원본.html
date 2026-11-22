@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>화풍 가 시간대 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{overflow:hidden;font-family:'Gowun Batang',serif}
+.game{position:relative;width:100vw;height:100vh;display:flex;flex-direction:column}
+.scene{position:relative;flex:1;min-height:0}
+.scene>svg{position:absolute;inset:0;width:100%;height:100%}
+.hud{position:absolute;top:14px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;font-size:15px;z-index:2}
+.hud .book{width:38px;height:38px;border-radius:10px;display:grid;place-items:center}
+.talk{position:relative;z-index:2;padding:4px 16px 20px;background:var(--ground)}
+.box{margin:0 auto;max-width:720px;padding:16px 20px 14px}
+.who{font-weight:700;font-size:16px;margin-bottom:6px}
+.line{font-size:19px;line-height:1.55;word-break:keep-all}
+.choices{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.choices span{padding:8px 14px;font-size:16px}
+@media (min-width:800px){
+  .talk{padding:8px 16px 28px}
+  .line{font-size:21px}
+}
+/* ---------- A: 연필 선 + 수채화 ---------- */
+.A{--ground:#dccfb5;background:#f3ead8;color:#3b342c;font-family:'Gaegu',cursive}
+.A .hud{font-size:20px;font-weight:700}
+.A .hud .book{background:#fffaf0cc;border:1.5px solid #3b342c;transform:rotate(-3deg)}
+.A .box{background:#fffaf0ee;border:2px solid #3b342c;border-radius:6px 14px 8px 12px;box-shadow:3px 4px 0 #3b342c22}
+.A .who{font-size:21px;color:#8a5a44}
+.A .line{font-size:24px;line-height:1.4}
+.A .choices span{border:1.5px dashed #3b342c;border-radius:20px;font-size:21px}
+.A .choices span:first-child{background:#e8c9a8}
+.A .wc{filter:url(#wc)}
+.under{display:none}.A .under{display:inline;fill:#f8f2e6}
+.A .pen{fill:none;stroke:#3b342c;stroke-width:1.1;stroke-linejoin:round;stroke-linecap:round;filter:url(#pencil)}
+.A .sky{fill:#cfe1e6}.A .sun{fill:#f2c38b}.A .cloud{fill:#fff}
+.A .sea{fill:#8fb7c4}.A .hill{fill:#a9c08f}.A .lh{fill:#f6f1e6}.A .lhtop{fill:#d9715b}
+.A .rail{fill:#8b7d70}.A .buffer{fill:#d9715b}.A .plat{fill:#d9cbb2}.A .edge{fill:#efe4c9}
+.A .sign{fill:#fbf6ea}.A .post{fill:#7b6a5a}.A .bench{fill:#b98d64}
+.A .gma{fill:#8d6e8f}.A .gmaskin{fill:#f1d3b8}.A .hair{fill:#e9e6e1}
+.A .kid{fill:#7ea0c9}.A .kidskin{fill:#f6dcc2}.A .kidhair{fill:#5a4636}.A .bag{fill:#e0a458}
+.A .signtxt{fill:#3b342c;font-family:'Gaegu';font-weight:700}
+.A .beam{display:none}
+.A .shadow{fill:#3b342c22}
+/* ---------- B: 종이 오려 붙이기 ---------- */
+.B{--ground:#c9a57b;background:#2d4a5a;color:#2f2a26;font-family:'Jua',sans-serif}
+.B .hud{color:#5b3a2a;font-size:18px}
+.B .hud .book{background:#f6c35b;box-shadow:2px 3px 0 #0003}
+.B .box{background:#fff8ec;border-radius:4px;box-shadow:4px 5px 0 #00000033;transform:rotate(-.6deg)}
+.B .who{color:#e06a4e;font-size:18px}
+.B .line{font-size:21px}
+.B .choices span{background:#f6c35b;border-radius:3px;box-shadow:2px 3px 0 #0002;font-size:18px}
+.B .choices span:last-child{background:#a6d0c8}
+.B .wc{filter:url(#cut)}
+.B .pen{display:none}
+.B .sky{fill:#f7d7a8}.B .sun{fill:#f39a6b}.B .cloud{fill:#fff8ec}
+.B .sea{fill:#4f97a8}.B .hill{fill:#7fb069}.B .lh{fill:#fff8ec}.B .lhtop{fill:#e06a4e}
+.B .rail{fill:#6b5a4c}.B .buffer{fill:#e06a4e}.B .plat{fill:#c9a57b}.B .edge{fill:#f6c35b}
+.B .sign{fill:#fff8ec}.B .post{fill:#5b4a3c}.B .bench{fill:#a0663f}
+.B .gma{fill:#8a6fb0}.B .gmaskin{fill:#f5c9a3}.B .hair{fill:#f2efe9}
+.B .kid{fill:#3f7cc4}.B .kidskin{fill:#f8d4b0}.B .kidhair{fill:#3d2b20}.B .bag{fill:#f6c35b}
+.B .signtxt{fill:#2f2a26;font-family:'Jua'}
+.B .beam{display:none}
+.B .shadow{fill:#0000}
+/* ---------- C: 노을 실루엣 ---------- */
+.C{--ground:#2e2140;background:#1b1424;color:#f6e9dc}
+.C .hud{color:#f6e9dc;font-size:16px;letter-spacing:.04em}
+.C .hud .book{border:1px solid #f6e9dc66}
+.C .box{background:#1b142499;border-top:1px solid #f6c48f88;border-bottom:1px solid #f6c48f88;backdrop-filter:blur(4px)}
+.C .who{color:#f6c48f;letter-spacing:.08em}
+.C .line{font-size:19px}
+.C .choices span{border:1px solid #f6e9dc55;border-radius:2px}
+.C .choices span:first-child{border-color:#f6c48f;color:#f6c48f}
+.C .pen{display:none}
+.C .sky{fill:url(#dusk)}.C .sun{fill:#ffd9a0;filter:url(#glow)}.C .cloud{fill:#e9879066}
+.C .sea{fill:url(#seaG)}
+.C .hill,.C .lh,.C .lhtop,.C .rail,.C .buffer,.C .plat,.C .edge,.C .sign,.C .post,.C .bench,.C .gma,.C .gmaskin,.C .hair,.C .kid,.C .kidskin,.C .kidhair,.C .bag{fill:#1b1424}
+.C .plat{fill:#2e2140}.C .edge{fill:#4a3560}
+.C .bench,.C .gma,.C .gmaskin,.C .hair,.C .kid,.C .kidskin,.C .kidhair,.C .bag,.C .post{fill:#0f0a14}
+.C .signtxt{fill:#f6c48f;font-family:'Gowun Batang';font-weight:700}
+.C .beam{fill:url(#beamG)}
+.C .lhlamp{fill:#ffe7b0!important;filter:url(#glow)}
+.C .shadow{fill:#0000}
+.A .lhlamp{fill:#f5d77a}.B .lhlamp{fill:#f6c35b}
+
+.A .hat{fill:#efd9a0}.A .hatband{fill:#d9715b}.A .kidhair{fill:#6b4a36}.A .kid{fill:#8fb0a0}
+.A .moon{fill:#f6ecc8}.A .stars{fill:#fff6d8}
+.moon,.stars,.night-only{display:none}
+.tint{pointer-events:none;mix-blend-mode:multiply;fill:transparent}
+.t-eve .tint{fill:#e89a70;opacity:.38}
+.t-eve .sky{fill:#f2c9a0}
+.t-day .sun{transform:translate(-30px,-112px)}.t-day .pen path[d^="M166 165"]{display:none}
+.t-night .box{color:#3b342c}
+.t-night .tint{fill:#2c3868;opacity:.82}
+.t-night .sun{display:none}.t-night .moon,.t-night .stars,.t-night .night-only{display:inline}
+.t-night .pen path[d^="M166 165"]{display:none}
+.nlamp{fill:#ffe9a8;filter:url(#glow)}.nbeam{fill:url(#beamG);opacity:.8}
+.t-night .moon,.t-night .stars{filter:url(#glow)}
+.t-night{--ground:#3b3a4a;background:#2a2c40;color:#efe6d4}
+.t-night .hud{color:#efe6d4}.t-night .hud .book{background:#3b3a4acc;border-color:#efe6d4}
+.t-night .box{background:#e9e1cf;}
+.t-eve{--ground:#c9a98c}
+</style></head>
+<body class="A t-eve">
+<div class="game">
+  <div class="scene">
+    <div class="hud"><span>1일째 · 저녁</span><span class="book" aria-label="일기장"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 3h10a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"/><path d="M4 15a2 2 0 0 1 2-2h10"/><path d="M8 7h5"/></svg></span></div>
+    <svg viewBox="0 0 400 300" id="scene" preserveAspectRatio="xMidYMax slice" aria-label="달섬역 승강장 장면">
+      <defs>
+        <filter id="wc" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="3" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="5" result="d"/>
+          <feGaussianBlur in="d" stdDeviation="0.6" result="b"/>
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="8" result="g"/>
+          <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.1" result="ga"/>
+          <feComposite in="b" in2="ga" operator="in" result="tex"/>
+          <feComponentTransfer in="tex"><feFuncA type="linear" slope="0.85"/></feComponentTransfer>
+        </filter>
+        <filter id="pencil" x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="2" seed="5" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
+        </filter>
+        <filter id="cut" x="-10%" y="-10%" width="130%" height="130%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="2" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="2.5" result="d"/>
+          <feDropShadow in="d" dx="1.2" dy="1.6" stdDeviation="0.8" flood-color="#000" flood-opacity="0.28"/>
+        </filter>
+        <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2a5a"/><stop offset=".45" stop-color="#b8577a"/><stop offset=".8" stop-color="#f29a6b"/><stop offset="1" stop-color="#ffd29a"/></linearGradient>
+        <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a77a"/><stop offset=".3" stop-color="#7a4a74"/><stop offset="1" stop-color="#2a1d38"/></linearGradient>
+        <linearGradient id="beamG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe7b0" stop-opacity=".55"/><stop offset="1" stop-color="#ffe7b0" stop-opacity="0"/></linearGradient>
+
+        <rect id="s-sky" x="-400" y="-60" width="1200" height="235"/>
+        <circle id="s-sun" cx="186" cy="160" r="20"/>
+        <path id="s-cloud1" d="M70 70 q10 -16 28 -8 q14 -12 28 2 q16 0 14 12 h-74 q-8 -2 4 -6z"/>
+        <path id="s-cloud2" d="M250 50 q8 -12 22 -6 q12 -9 22 2 q12 0 10 9 h-58 q-6 -2 4 -5z"/>
+        <rect id="s-sea" x="-400" y="165" width="1200" height="60"/>
+        <path id="s-hill" d="M214 172 Q244 122 268 120 Q300 119 330 150 L360 172 Z"/>
+        <path id="s-lh" d="M258 121 L274 121 L271 77 L261 77 Z"/>
+        <rect id="s-lhtop" x="259" y="69" width="14" height="8"/>
+        <path id="s-lhroof" d="M257 69 L266 59 L275 69 Z"/>
+        <path id="s-beam" d="M273 73 L520 40 L520 106 Z"/>
+        <rect id="s-rail" x="-400" y="208" width="708" height="3"/>
+        <path id="s-sleepers" d="M-400 206h6v8h-6zM-380 206h6v8h-6zM-360 206h6v8h-6zM-340 206h6v8h-6zM-320 206h6v8h-6zM-300 206h6v8h-6zM-280 206h6v8h-6zM-260 206h6v8h-6zM-240 206h6v8h-6zM-220 206h6v8h-6zM-200 206h6v8h-6zM-180 206h6v8h-6zM-160 206h6v8h-6zM-140 206h6v8h-6zM-120 206h6v8h-6zM-100 206h6v8h-6zM-80 206h6v8h-6zM-60 206h6v8h-6zM-40 206h6v8h-6zM-20 206h6v8h-6zM0 206h6v8h-6zM20 206h6v8h-6zM40 206h6v8h-6zM60 206h6v8h-6zM80 206h6v8h-6zM100 206h6v8h-6zM120 206h6v8h-6zM140 206h6v8h-6zM160 206h6v8h-6zM180 206h6v8h-6zM200 206h6v8h-6zM220 206h6v8h-6zM240 206h6v8h-6zM260 206h6v8h-6zM280 206h6v8h-6z"/>
+        <path id="s-buffer" d="M300 192 h14 v24 h-14z"/>
+        <rect id="s-plat" x="-400" y="222" width="1200" height="80"/>
+        <rect id="s-edge" x="-400" y="222" width="1200" height="5"/>
+        <rect id="s-post1" x="116" y="176" width="3" height="48"/>
+        <rect id="s-post2" x="151" y="176" width="3" height="48"/>
+        <rect id="s-sign" x="104" y="150" width="62" height="26" rx="2"/>
+        <path id="s-bench" d="M196 246 h66 v5 h-66z M200 251 h4 v14 h-4z M254 251 h4 v14 h-4z M198 232 h62 v4 h-62z M200 236 h3 v10 h-3z M255 236 h3 v10 h-3z"/>
+        <path id="s-gma" d="M216 246 q-2 -24 12 -26 q16 0 15 26 z M226 246 q8 0 10 6 l2 12 h-8 l-2 -10 h-6z"/>
+        <circle id="s-gmahead" cx="229" cy="213" r="8"/>
+        <circle id="s-bun" cx="232" cy="203" r="4.5"/>
+        <path id="s-gmahair" d="M221 212 q0 -10 9 -10 q8 0 8 9 q-4 -5 -9 -5 q-6 0 -8 6z"/>
+        <path id="s-kid" d="M168 236 q-1 -17 8 -17 q9 0 8 17 z M170 236 h4.5 v14 h-4.5z M178 236 h4.5 v14 h-4.5z"/>
+        <path id="s-bag" d="M183.5 222 h6 q2 0 2 2 v11 h-8z"/>
+        <circle id="s-kidhead" cx="176" cy="211" r="7.5"/>
+        <path id="s-kidhair" d="M168 213 q-1 -10 8 -10 q9 0 8 10 q0 3 -1.5 4 l-1 -6 q-5 -2 -11 0 l-1 6 q-1.5 -1 -1.5 -4z"/>
+        <path id="s-hat" d="M165 206 q11 -3.5 22 0 q-11 3 -22 0z M170 205 q0 -6 6 -6 q6 0 6 6z"/>
+        <path id="s-hatband" d="M170.2 203.6 h11.6 v1.6 h-11.6z"/>
+        <circle id="s-moon" cx="150" cy="58" r="10"/>
+        <path id="s-stars" d="M40 30h1.5v1.5h-1.5zM120 22h1.5v1.5h-1.5zM160 48h1.5v1.5h-1.5zM230 28h1.5v1.5h-1.5zM330 40h1.5v1.5h-1.5zM20 90h1.5v1.5h-1.5zM200 80h1.5v1.5h-1.5zM360 90h1.5v1.5h-1.5zM-40 50h1.5v1.5h-1.5zM440 30h1.5v1.5h-1.5zM300 15h1.5v1.5h-1.5zM100 110h1.5v1.5h-1.5z"/>
+        <ellipse id="s-sh1" cx="230" cy="266" rx="38" ry="4"/>
+        <ellipse id="s-sh2" cx="176" cy="251" rx="11" ry="2.5"/>
+      </defs>
+
+      <g class="wc">
+        <use href="#s-sky" class="sky"/>
+        <use href="#s-cloud1" class="cloud"/><use href="#s-cloud2" class="cloud"/>
+        <use href="#s-sun" class="sun"/>
+        <use href="#s-sea" class="sea"/>
+        <use href="#s-beam" class="beam"/>
+        <use href="#s-hill" class="hill"/>
+        <use href="#s-lh" class="lh"/><use href="#s-lhtop" class="lhtop lhlamp"/><use href="#s-lhroof" class="lhtop"/>
+        <use href="#s-sleepers" class="rail"/><use href="#s-rail" class="rail"/>
+        <use href="#s-buffer" class="buffer"/>
+        <use href="#s-plat" class="plat"/><use href="#s-edge" class="edge"/>
+        <use href="#s-sh1" class="shadow"/><use href="#s-sh2" class="shadow"/>
+      </g>
+      <g class="pen">
+        <use href="#s-cloud1"/><use href="#s-cloud2"/>
+        <path d="M166 165 A20 20 0 0 1 206 165"/>
+        <path d="M-400 165 H800"/>
+        <path d="M-60 180 q10 -2 20 0 M30 185 q8 -2 16 0 M80 195 q10 -2 20 0 M200 182 q8 -2 16 0 M340 190 q10 -2 18 0 M420 180 q10 -2 20 0"/>
+        <use href="#s-hill"/><use href="#s-lh"/><use href="#s-lhtop"/><use href="#s-lhroof"/>
+        <use href="#s-rail"/><use href="#s-buffer"/><path d="M300 200h14M300 208h14"/>
+        <path d="M-400 222 H800 M-400 227 H800"/>
+        <path d="M-60 262 h30 M20 250 h30 M300 260 h40 M90 280 h24 M420 270 h30"/>
+      </g>
+      <g class="under">
+        <use href="#s-post1"/><use href="#s-post2"/><use href="#s-sign"/><use href="#s-bench"/>
+        <use href="#s-gma"/><use href="#s-gmahead"/><use href="#s-bun"/><use href="#s-gmahair"/>
+        <use href="#s-bag"/><use href="#s-kid"/><use href="#s-kidhead"/><use href="#s-kidhair"/><use href="#s-hat"/>
+      </g>
+      <g class="wc">
+        <use href="#s-post1" class="post"/><use href="#s-post2" class="post"/>
+        <use href="#s-sign" class="sign"/>
+        <use href="#s-bench" class="bench"/>
+        <use href="#s-gma" class="gma"/><use href="#s-gmahead" class="gmaskin"/><use href="#s-bun" class="hair"/><use href="#s-gmahair" class="hair"/>
+        <use href="#s-bag" class="bag"/><use href="#s-kid" class="kid"/><use href="#s-kidhead" class="kidskin"/><use href="#s-kidhair" class="kidhair"/><use href="#s-hat" class="hat"/><use href="#s-hatband" class="hatband"/>
+      </g>
+      <g class="pen">
+        <use href="#s-post1"/><use href="#s-post2"/><use href="#s-sign"/>
+        <use href="#s-bench"/>
+        <use href="#s-gma"/><use href="#s-gmahead"/><use href="#s-bun"/>
+        <use href="#s-bag"/><use href="#s-kid"/><use href="#s-kidhead"/><use href="#s-kidhair"/><use href="#s-hat"/>
+      </g>
+      <text class="signtxt" x="135" y="167" text-anchor="middle" font-size="13">달 섬</text>
+      <text class="signtxt" x="135" y="173.5" text-anchor="middle" font-size="5" opacity=".75">종점 · DALSEOM</text>
+      <rect class="tint" x="-400" y="-60" width="1200" height="400"/>
+      <g class="night-only"><use href="#s-stars" class="stars"/><use href="#s-moon" class="moon"/><use href="#s-beam" class="nbeam"/><use href="#s-lhtop" class="nlamp"/></g>
+    </svg>
+  </div>
+  <div class="talk"><div class="box">
+    <div class="who">순례 할머니</div>
+    <div class="line">기차는 일주일 뒤에나 온단다. …밥은 먹었니?</div>
+    <div class="choices"><span>아직이요</span><span>먹었어요</span></div>
+  </div></div>
+</div>
+<script>
+const q=new URLSearchParams(location.search);
+document.body.className='A t-'+(q.get('t')||'eve');
+const lab={day:'낮',eve:'저녁',night:'밤'};document.querySelector('.hud span').textContent='1일째 · '+lab[q.get('t')||'eve'];
+const fit=()=>document.getElementById('scene').setAttribute('preserveAspectRatio',innerWidth>=800?'xMidYMax meet':'xMidYMax slice');fit();addEventListener('resize',fit);
+</script>
+</body></html>
