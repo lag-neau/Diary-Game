@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3ead8">
+<title>지워지는 일기장</title>
+<meta name="description" content="밤마다 일기 한 줄을 지워야 다음 날이 오는 섬마을 이야기">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/game.css">
+</head>
+<body class="t-day">
+<div class="game" id="game">
+  <div class="scene" id="scene">
+    <div class="stage" id="stage"></div>
+    <div class="rain" id="rain" hidden></div>
+    <div class="hud">
+      <span id="hud-time"></span>
+      <button class="hud-btn" id="to-title" type="button" aria-label="제목 화면으로">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h12M4 10h12M4 14h12"/></svg>
+      </button>
+    </div>
+    <div class="fade" id="fade"></div>
+  </div>
+  <div class="talk" id="talk">
+    <div class="box" id="box">
+      <div class="who" id="who"></div>
+      <div class="line" id="line"></div>
+      <div class="choices" id="choices"></div>
+      <div class="next" id="next" aria-hidden="true">▾</div>
+    </div>
+  </div>
+</div>
+
+<section class="title" id="title">
+  <div class="title-inner">
+    <svg class="cover" viewBox="0 0 120 150" aria-hidden="true">
+      <filter id="tp"><feTurbulence type="fractalNoise" baseFrequency=".09" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.4"/></filter>
+      <g filter="url(#tp)" stroke="#3b342c" stroke-width="2" stroke-linejoin="round">
+        <path d="M18 10h84a6 6 0 0 1 6 6v118a6 6 0 0 1-6 6H18z" fill="#b98d64"/>
+        <path d="M18 10v130" />
+        <path d="M34 44h56v26H34z" fill="#fbf6ea"/>
+        <path d="M42 54h40M42 61h28" stroke-width="1.4"/>
+      </g>
+    </svg>
+    <h1>지워지는 일기장</h1>
+    <p class="sub">달섬에서 보낸 일주일</p>
+    <div class="title-btns">
+      <button type="button" id="btn-new" class="pill main">처음부터</button>
+      <button type="button" id="btn-continue" class="pill" hidden>이어하기</button>
+    </div>
+    <p class="ver">버전 0.1 · 1일째까지 할 수 있어요</p>
+  </div>
+</section>
+
+<section class="diary" id="diary" hidden>
+  <div class="page" id="page">
+    <div class="page-head"><span id="diary-day"></span><span class="weather" id="diary-weather"></span></div>
+    <div class="entries" id="entries"></div>
+    <p class="rule" id="diary-rule">한 줄을 지워야 잠들 수 있다.</p>
+    <p class="hint" id="diary-hint">지우고 싶은 줄을 손가락이나 마우스로 문질러 보세요.</p>
+  </div>
+  <div class="eraser" id="eraser" aria-hidden="true"></div>
+</section>
+
+<section class="ending" id="ending" hidden>
+  <div class="ending-inner">
+    <p class="ending-kicker" id="ending-kicker"></p>
+    <h2 id="ending-title"></h2>
+    <p class="ending-body" id="ending-body"></p>
+    <div class="title-btns">
+      <button type="button" id="btn-again" class="pill main">다시 하기</button>
+      <button type="button" id="btn-home" class="pill">제목으로</button>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

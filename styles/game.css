@@ -1,0 +1,139 @@
+/* 지워지는 일기장 — 화풍 가 (연필 선 + 수채화) */
+:root{
+  --ink:#3b342c;
+  --paper:#f3ead8;
+  --note:#fffaf0;
+  --accent:#8a5a44;
+  --ground:#dccfb5;
+  --pill:#e8c9a8;
+  --font:'Gaegu','Apple SD Gothic Neo','Malgun Gothic',cursive;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--paper);color:var(--ink);font-family:var(--font)}
+body{overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+[hidden]{display:none!important}
+
+/* ---------- 게임 틀 ---------- */
+.game{position:fixed;inset:0;display:flex;flex-direction:column}
+.scene{position:relative;flex:1;min-height:0;overflow:hidden}
+.stage{position:absolute;inset:0;transition:opacity .45s ease}
+.stage>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage.shake{animation:shake .5s ease}
+@keyframes shake{20%{transform:translate(-4px,1px)}40%{transform:translate(4px,-1px)}60%{transform:translate(-3px,0)}80%{transform:translate(2px,1px)}}
+.fade{position:absolute;inset:0;background:#1d1a22;opacity:0;pointer-events:none;transition:opacity .5s ease;z-index:4}
+.fade.on{opacity:1}
+
+.hud{position:absolute;top:max(12px,env(safe-area-inset-top));left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:700;z-index:3}
+.hud-btn{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:#fffaf0cc;border:1.5px solid var(--ink);transform:rotate(-3deg)}
+
+.rain{position:absolute;inset:-20% -10%;z-index:2;pointer-events:none;opacity:.55;
+  background-image:repeating-linear-gradient(103deg,transparent 0 22px,#ffffff66 22px 23.5px,transparent 23.5px 47px),
+                   repeating-linear-gradient(100deg,transparent 0 37px,#ffffff44 37px 38px,transparent 38px 71px);
+  background-size:120px 160px,170px 220px;animation:rain .45s linear infinite}
+@keyframes rain{to{background-position:-24px 160px,-30px 220px}}
+
+/* ---------- 대화창 ---------- */
+.talk{position:relative;z-index:3;padding:6px 16px max(18px,env(safe-area-inset-bottom));background:var(--ground);min-height:212px;transition:background .45s}
+.box{position:relative;margin:0 auto;max-width:720px;min-height:178px;padding:14px 20px 16px;background:var(--note);border:2px solid var(--ink);border-radius:6px 14px 8px 12px;box-shadow:3px 4px 0 #3b342c22;cursor:pointer}
+.who{font-weight:700;font-size:21px;color:var(--accent);min-height:26px}
+.line{font-size:24px;line-height:1.4;word-break:keep-all;overflow-wrap:break-word;min-height:68px}
+.box.narr .line{color:#5a5047}
+.box.narr .who{min-height:4px}
+.choices{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.choices:empty{display:none}
+.choice{padding:6px 16px;border:1.5px dashed var(--ink);border-radius:20px;font-size:21px;background:var(--note);transition:background .15s,transform .15s}
+.choice:hover,.choice:focus-visible{background:var(--pill);outline:none;transform:rotate(-1deg)}
+.next{position:absolute;right:16px;bottom:8px;font-size:20px;opacity:0;animation:bob 1.2s ease-in-out infinite}
+.box.wait .next{opacity:.7}
+@keyframes bob{50%{transform:translateY(3px)}}
+
+@media (min-width:800px){
+  .talk{padding:8px 16px 28px}
+  .line{font-size:25px}
+}
+
+/* ---------- 제목 · 엔딩 ---------- */
+.title,.ending{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:24px;background:var(--paper);
+  background-image:radial-gradient(#3b342c0d 1px,transparent 1px);background-size:6px 6px}
+.title-inner,.ending-inner{text-align:center;max-width:420px}
+.cover{width:110px;height:auto;margin-bottom:18px;transform:rotate(-4deg)}
+.title h1{font-size:44px;line-height:1.1}
+.title .sub{font-size:22px;color:var(--accent);margin-top:6px}
+.title-btns{display:flex;flex-direction:column;gap:12px;margin-top:30px;align-items:center}
+.pill{min-width:200px;padding:10px 24px;border:2px solid var(--ink);border-radius:24px;font-size:23px;background:var(--note);box-shadow:2px 3px 0 #3b342c22}
+.pill.main{background:var(--pill)}
+.pill:hover,.pill:focus-visible{transform:rotate(-1.5deg);outline:none}
+.ver{margin-top:26px;font-size:17px;opacity:.6}
+.ending{background-color:#efe4cf}
+.ending-kicker{font-size:19px;color:var(--accent)}
+.ending h2{font-size:36px;margin:6px 0 14px}
+.ending-body{font-size:21px;line-height:1.5;word-break:keep-all;white-space:pre-line}
+
+/* ---------- 일기장 ---------- */
+.diary{position:fixed;inset:0;z-index:15;display:grid;place-items:center;padding:16px;background:#1d1a22e6;animation:fadein .5s ease}
+@keyframes fadein{from{opacity:0}}
+.page{position:relative;width:100%;max-width:560px;max-height:100%;overflow:auto;padding:22px 22px 18px 46px;background:#fbf5e6;border-radius:4px 10px 10px 4px;box-shadow:0 10px 40px #0007;
+  background-image:linear-gradient(90deg,transparent 30px,#d9715b55 30px 31.5px,transparent 31.5px),repeating-linear-gradient(transparent 0 37px,#8fb7c455 37px 38px);
+  background-position:0 0,0 10px;animation:open .6s ease}
+@keyframes open{from{transform:perspective(900px) rotateY(-25deg) scale(.96);opacity:0}}
+.page-head{display:flex;justify-content:space-between;font-size:22px;font-weight:700;margin-bottom:10px}
+.weather{font-weight:400;color:#6b6157}
+.entries{display:flex;flex-direction:column;gap:6px}
+.entry{position:relative;touch-action:none;cursor:none}
+.entry canvas{display:block;width:100%}
+.entry.slip{animation:slip .4s ease}
+@keyframes slip{25%{transform:translateX(-6px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+.entry.gone{transition:opacity .8s ease;opacity:0}
+.rule{margin-top:14px;font-size:21px;color:#b5523e;transform:rotate(-1deg)}
+.hint{margin-top:4px;font-size:17px;color:#6b6157;min-height:24px}
+.eraser{position:fixed;left:0;top:0;width:34px;height:22px;border:2px solid var(--ink);border-radius:5px;background:linear-gradient(90deg,#e9a3a0 0 55%,#9fc1d6 55%);pointer-events:none;z-index:30;opacity:0;transform:translate(-50%,-50%) rotate(-25deg);transition:opacity .2s}
+.eraser.on{opacity:1}
+.crumb{position:fixed;width:4px;height:3px;background:#d9b9b0;border-radius:2px;pointer-events:none;z-index:29;animation:crumb .7s ease-in forwards}
+@keyframes crumb{to{transform:translate(var(--dx),40px) rotate(90deg);opacity:0}}
+@media (hover:none){.entry{cursor:auto}}
+
+/* ---------- 그림 (SVG) ---------- */
+.wc{filter:url(#wc)}
+.pen{fill:none;stroke:var(--ink);stroke-width:1.1;stroke-linejoin:round;stroke-linecap:round;filter:url(#pencil)}
+.under{fill:#f8f2e6}
+.tint{pointer-events:none;mix-blend-mode:multiply;fill:transparent}
+.nightfx{display:none}
+.t-eve .tint{fill:#e89a70;opacity:.38}
+.t-night .tint{fill:#2c3868;opacity:.82}
+.t-dim .tint{fill:#3a3f6a;opacity:.62}
+.t-lamp .tint{fill:#a77d5d;opacity:.42}
+.t-morning .tint{fill:#ffe2b0;opacity:.25}
+.t-night .nightfx,.t-dim .nightfx,.t-lamp .nightfx{display:inline}
+.glow{filter:url(#glow)}
+.beam{fill:url(#beamG);animation:beam 4s ease-in-out infinite}
+@keyframes beam{0%,100%{opacity:.15}50%{opacity:.85}}
+.winrain{display:none}
+.raining .winrain{display:inline}
+.winrain path{stroke:#cfe0ea;stroke-width:.8;opacity:.8;animation:wr .5s linear infinite}
+@keyframes wr{from{transform:translateY(-8px)}to{transform:translateY(8px)}}
+
+.sky{fill:#cfe1e6}.t-eve .sky{fill:#f2c9a0}
+.sun{fill:#f2c38b}.cloud{fill:#fff}.moon{fill:#f6ecc8}.star{fill:#fff6d8}
+.sea{fill:#8fb7c4}.hill{fill:#a9c08f}.lh{fill:#f6f1e6}.red{fill:#d9715b}.lamp{fill:#f5d77a}
+.rail{fill:#8b7d70}.plat{fill:#d9cbb2}.edge{fill:#efe4c9}
+.sign{fill:#fbf6ea}.post{fill:#7b6a5a}.wood{fill:#b98d64}.wood2{fill:#a47a55}
+.shadow{fill:#3b342c22}
+.signtxt{fill:var(--ink);font-family:var(--font);font-weight:700}
+/* 사람 */
+.skin{fill:#f1d3b8}.white{fill:#ece8e1}
+.gma{fill:#8d6e8f}.gma2{fill:#c9b6a2}
+.kid{fill:#8fb0a0}.kidpants{fill:#7e94b0}.kidhair{fill:#6b4a36}.hat{fill:#efd9a0}.bag{fill:#e0a458}
+.navy{fill:#4a5878}.navy2{fill:#3c4660}.gold{fill:#e2b85c}
+.coat{fill:#9a8a74}.coat2{fill:#6d6255}.fedora{fill:#5b4f45}
+/* 집 */
+.wall{fill:#e9dcc2}.roof{fill:#7d8a96}.door{fill:#a47a55}.yard{fill:#cdbb98}
+.glass{fill:#f5d79a}.warm{fill:#ffd98a}
+.nightglass{fill:#8fb7c4}.t-night .nightglass,.t-dim .nightglass,.t-lamp .nightglass{fill:#55648c}
+.jar{fill:#8a5f45}.cloth{fill:#e9b8a8}
+.kwall{fill:#efe2c8}.floor{fill:#c9a98c}.cupboard{fill:#a47a55}.bowl{fill:#f4efe4}.counter{fill:#b7c3c0}.bulb{fill:#fff1b8}
+.rwall{fill:#f1e6cf}.jangpan{fill:#e7c98d}.quilt{fill:#c98a8a}.quilt2{fill:#f3d9c9}
+.tw{fill:#9fb59a}.seat{fill:#7a8fb0}.seat2{fill:#6a7ea0}.tfloor{fill:#b5a48a}
+.t-night .box,.t-dim .box{background:#ece4d2}
+.t-night .hud,.t-dim .hud{color:#efe6d4}
+.t-night .hud-btn,.t-dim .hud-btn{background:#3b3a4acc;border-color:#efe6d4}
