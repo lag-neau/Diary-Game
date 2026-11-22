@@ -4,7 +4,7 @@
 지운 일은 다음 날 세상에서 없던 일이 됩니다. 무엇을 남길지가 곧 결말입니다.
 
 - 상태: 버전 0.1 (1일째까지 플레이 가능)
-- 플레이: https://lag-neau.github.io/diary-game/ (GitHub Pages를 켜면 열려요)
+- 플레이: https://lag-neau.github.io/Diary-Game/ (GitHub Pages를 켜면 열려요)
 - 폰·컴퓨터 브라우저에서 설치 없이 바로
 
 ## 폴더
